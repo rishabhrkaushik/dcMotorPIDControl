@@ -28,6 +28,19 @@ void countInc(){
   lastTime = micros();  
 }
 
+// read commands
+void serialRead(){
+  // pwm read as
+  //P:100
+  if(Serial.available()){
+    String rec  = Serial.readStringUntil('\n');
+    if(rec.charAt(0) == 'P'){
+      pwmValue = rec.substring(rec.indexOf(':')+1, rec.indexOf('\n')).toInt();     
+      Serial.print("PWM: ");Serial.println(pwmValue);       
+    }
+  }
+}
+
 void setup(){
   pinMode(interruptPin, INPUT);
   attachInterrupt(0, countInc, FALLING);
@@ -41,7 +54,7 @@ void setup(){
 }
 
 void loop(){
-
+  serialRead();
   //speed measurement, if time passed = 0, speed = 0
   if(micros() - lastTime >= minSpeedTime){
     speedM = 0;
@@ -50,6 +63,7 @@ void loop(){
     // speed = 1min in microseconds/time between subsequent interrupt times
     speedM = 60000000/(timePassed*n);
   }
+  analogWrite(pwmPin, pwmValue);
   Serial.print("Current Measured Speed(rpm): ");
   Serial.println(speedM);
 
