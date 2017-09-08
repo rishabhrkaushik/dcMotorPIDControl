@@ -41,13 +41,16 @@ void setup(){
 }
 
 void loop(){
+
+  //speed measurement, if time passed = 0, speed = 0
   if(micros() - lastTime >= minSpeedTime){
     speedM = 0;
   }
   else{
-   speedM = 60000000/(timePassed*n);
+    // speed = 1min in microseconds/time between subsequent interrupt times
+    speedM = 60000000/(timePassed*n);
   }
-  Serial.print("Current Measured Speed: ");
+  Serial.print("Current Measured Speed(rpm): ");
   Serial.println(speedM);
 
   delay(100);
