@@ -1,8 +1,15 @@
 // interrupt using hall effect or IR sensor on pin number 2 of Arduino
 #define interruptPin 2
 
+// direction pin and pwm pin of motor driver
+#define dirPin 5
+#define pwmPin 10
+
 // interrupts per rotation. Number of magnets in this case
 int n = 1;
+
+// value of pwm signal
+double pwmValue = 100;
 
 // time for measuring speed
 unsigned long lastTime;
@@ -26,6 +33,10 @@ void setup(){
   attachInterrupt(0, countInc, FALLING);
   Serial.begin(9600);
   Serial.setTimeout(10);
+  pinMode(pwmPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+  digitalWrite(dirPin, LOW);
+  analogWrite(pwmPin, pwmValue);
   delay(1000);  
 }
 
@@ -38,6 +49,6 @@ void loop(){
   }
   Serial.print("Current Measured Speed: ");
   Serial.println(speedM);
-  
+
   delay(100);
 }
